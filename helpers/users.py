@@ -18,5 +18,12 @@ class User:
                 print(error)
                 print("Oh no something went wrong try again")
 
-    def log_in(self, user):
-        pass
+    def log_in(self, user, user_collection):
+        query_user = user_collection.find_one({"name": user["name"]})
+        if not query_user:
+            print("**********Sorry we could not find the user try again**********")
+            return False
+        validate = query_user["passw"] == user["passw"]
+        if not validate:
+            print("**********Your password does not match**********")
+        return validate
