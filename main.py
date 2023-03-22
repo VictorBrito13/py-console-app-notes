@@ -41,6 +41,7 @@ if action == "s":
 elif action == "l":
         while attempting:
             print("Ok please enter your name and your password")
+            session_user = None
             name = input("Enter your name: ").strip()
             passw = input("Enter your password: ")
             user = {
@@ -48,8 +49,9 @@ elif action == "l":
                 "passw": hashlib.sha256(passw.encode()).hexdigest()
             }
             session = USER.log_in(user, DB["users"])
-            if session:
+            if session["session"]:
                 attempting = False
+                session_user = session["user"]
             while session:
                 print("Session active !!!!!!!!!!")
                 print("You can create a new note (C), delete a note (D), update (U), or review all your notes (R); Press (L) to log out")
@@ -60,6 +62,7 @@ elif action == "l":
                 if session_action == "c":
                     print("Ok field the form and you get it")
                     note = {
+                        "author": session_user["_id"],
                         "title": input("1/2; Enter your title: "),
                         "description": input("2/2; Enter what you gonna do: "),
                         "created_at": datetime.now(),
@@ -76,3 +79,10 @@ elif action == "l":
                         NOTE.delete_note(note_name)
                     elif confirm == "n":
                         print("Your note has not been deleted")
+
+                #* Get note
+                elif session_action == "r":
+                    print("****Here you got your notes****")
+                    notes = NOTE.get_notes(DB["users"], session_user["_id"])
+                    for note in notes:
+                        print(note)

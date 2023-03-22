@@ -16,8 +16,20 @@ class Note:
             print("Oh a error has ocurred try again")
 
     def delete_note(self, note_name):
-        delete_count = self.collection.delete_one({"title": note_name})
-        if(delete_count >= 1):
-            print("note deleted")
-        else:
-            print("The note has not been deleted, maybe this is not it name")
+        try:
+            delete_count = self.collection.delete_one({"title": note_name})
+            if(delete_count >= 1):
+                print("note deleted")
+            else:
+                print("The note has not been deleted, maybe this is not it name")
+        except Exception:
+            print("Oh a error has ocurred try again")
+
+    def get_notes(self, user_collection, user_id):
+        try:
+            users = user_collection.aggregate([{ "$lookup": { "from": "notes", "localField": "_id", "foreignField": "author", "as": "notes" } }])
+            for user in users:
+                if user["_id"] == user_id:
+                    return user["notes"]
+        except Exception:
+            print("we have a problem try again")
