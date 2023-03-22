@@ -1,7 +1,9 @@
 import hashlib
+from datetime import datetime
 from validators.text import greater_than
 from helpers.connection_db import MongoConnector
 from helpers.users import User
+from helpers.notes import Note
 
 STRING_CONNECTOR = "mongodb://127.0.0.1/console_app_notes"
 
@@ -51,4 +53,26 @@ elif action == "l":
             while session:
                 print("Session active !!!!!!!!!!")
                 print("You can create a new note (C), delete a note (D), update (U), or review all your notes (R); Press (L) to log out")
-                session_action = input("What you wanna do? ")
+                session_action = input("What you wanna do? ").lower().strip()
+                NOTE = Note(DB["notes"])
+
+                #* Create note
+                if session_action == "c":
+                    print("Ok field the form and you get it")
+                    note = {
+                        "title": input("1/2; Enter your title: "),
+                        "description": input("2/2; Enter what you gonna do: "),
+                        "created_at": datetime.now(),
+                        "updated_at": datetime.now()
+                    }
+                    NOTE.create_note(note)
+
+                #* Delete note
+                elif session_action == "d":
+
+                    note_name = input("What is the name of the note to delete: ")
+                    confirm = input("Are you sure you want to delete this note? Y/N: ").lower().strip()
+                    if confirm == "y":
+                        NOTE.delete_note(note_name)
+                    elif confirm == "n":
+                        print("Your note has not been deleted")

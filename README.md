@@ -5,11 +5,11 @@
 
 ## Note Structure
 ### {
-    _id: mongo_Id
+    author: mongo_id
     title: string
     description: string
-    createdAt: date
-    updatedAt: date
+    created_at: date
+    updated_at: date
 }
 
 ## User Structure
