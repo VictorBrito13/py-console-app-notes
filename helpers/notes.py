@@ -16,15 +16,16 @@ class Note:
             print(error)
             print("Oh a error has ocurred try again")
 
-    def delete_note(self, note_name):
+    def delete_note(self, filter):
         try:
-            delete_count = self.collection.delete_one({"title": note_name})
-            if(delete_count >= 1):
+            result = self.collection.delete_one(filter)
+            if(result.deleted_count >= 1):
                 print("note deleted")
             else:
                 print("The note has not been deleted, maybe this is not it name")
-        except Exception:
+        except Exception as error:
             print("Oh a error has ocurred try again")
+            print(error)
 
     def get_notes(self, user_collection, user_id):
         try:

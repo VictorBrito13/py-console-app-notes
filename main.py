@@ -52,6 +52,8 @@ elif action == "l":
             if session["session"]:
                 attempting = False
                 session_user = session["user"]
+            else:
+                continue
             while session:
                 print("Session active !!!!!!!!!!")
                 print("You can create a new note (C), delete a note (D), update (U), or review all your notes (R); Press (L) to log out")
@@ -76,7 +78,7 @@ elif action == "l":
                     note_name = input("What is the name of the note to delete: ")
                     confirm = input("Are you sure you want to delete this note? Y/N: ").lower().strip()
                     if confirm == "y":
-                        NOTE.delete_note(note_name)
+                        NOTE.delete_note({"title": note_name, "author": session_user["_id"] })
                     elif confirm == "n":
                         print("Your note has not been deleted")
 
@@ -97,3 +99,9 @@ elif action == "l":
                         "updated_at": datetime.now()
                     }
                     NOTE.update_note({"title": note, "author": session_user["_id"] }, new_note)
+
+                elif session_action == "l":
+                    confirm = input("Are you sure you want to leave? Y/N ").lower().strip()
+                    if(confirm == "y"):
+                        session = False
+                        print("See you later")

@@ -22,8 +22,9 @@ class User:
         query_user = user_collection.find_one({"name": user["name"]})
         if not query_user:
             print("**********Sorry we could not find the user try again**********")
-            return False
+            return { "session": False }
         validate = query_user["passw"] == user["passw"]
         if not validate:
             print("**********Your password does not match**********")
+            return { "session": validate }
         return { "session": validate, "user":query_user }
