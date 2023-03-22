@@ -1,4 +1,5 @@
 from validators.text import greater_than
+import copy
 
 class Note:
     def __init__(self, collection):
@@ -33,3 +34,17 @@ class Note:
                     return user["notes"]
         except Exception:
             print("we have a problem try again")
+
+    def update_note(self, filter, new_note):
+        try:
+            new_note_copy = copy.deepcopy(new_note)
+            for key in new_note:
+                if new_note[key] == "": del new_note_copy[key]
+
+            print(new_note_copy)
+            result = self.collection.update_one(filter, { "$set": new_note_copy }, upsert=False)
+            print(f"we have modified {result.modified_count} note")
+
+        except Exception as error:
+            print("Error check the title of your note")
+            print(error)

@@ -86,3 +86,14 @@ elif action == "l":
                     notes = NOTE.get_notes(DB["users"], session_user["_id"])
                     for note in notes:
                         print(note)
+
+                #* Update note
+                elif session_action == "u":
+                    print("****Press enter in any field that you dont want to change****")
+                    note = input("Which note do you want to update? (write the title) ")
+                    new_note = {
+                        "title": input("1/2; Type the new title: "),
+                        "description": input("2/2; Type the new description: "),
+                        "updated_at": datetime.now()
+                    }
+                    NOTE.update_note({"title": note, "author": session_user["_id"] }, new_note)
