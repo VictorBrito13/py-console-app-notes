@@ -1,5 +1,6 @@
 import hashlib
 from datetime import datetime
+import pandas as pd
 from validators.text import greater_than
 from helpers.connection_db import MongoConnector
 from helpers.users import User
@@ -82,12 +83,18 @@ elif action == "l":
                     elif confirm == "n":
                         print("Your note has not been deleted")
 
-                #* Get note
+                #* Get notes
                 elif session_action == "r":
                     print("****Here you got your notes****")
                     notes = NOTE.get_notes(DB["users"], session_user["_id"])
+
                     for note in notes:
-                        print(note)
+                        table = pd.DataFrame({
+                                "Title": [note["title"]],
+                                "Description": [note["description"]]
+                            })
+                        print(table)
+                        print("\n")
 
                 #* Update note
                 elif session_action == "u":
