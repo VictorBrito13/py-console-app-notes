@@ -15,7 +15,7 @@ DB = DB_CONNECTOR.connect()
 USER = User(DB["users"])
 
 print("Hey there what you wanna do?")
-action = input("Log in (L) or Sign up (S): ").lower().strip()
+action = input(">>> Log in (L) or Sign up (S): ").lower().strip()
 attempting = True
 session = False
 
@@ -24,9 +24,9 @@ if action == "s":
     while attempting:
 
         print("Great respond this questions to create your new account")
-        name = input("1/3; Enter your name: ").strip()
-        last_name = input("2/3; Enter your last name: ").strip()
-        passw = input("3/3; Enter your password: ")
+        name = input(">>> 1/3; Enter your name: ").strip()
+        last_name = input(">>> 2/3; Enter your last name: ").strip()
+        passw = input(">>> 3/3; Enter your password: ")
 
         if not(greater_than(passw, 8)):
             print("password must be at least 8 characters")
@@ -43,8 +43,8 @@ elif action == "l":
         while attempting:
             print("Ok please enter your name and your password")
             session_user = None
-            name = input("Enter your name: ").strip()
-            passw = input("Enter your password: ")
+            name = input(">>> Enter your name: ").strip()
+            passw = input(">>> Enter your password: ")
             user = {
                 "name": name,
                 "passw": hashlib.sha256(passw.encode()).hexdigest()
@@ -58,7 +58,7 @@ elif action == "l":
             while session:
                 print("Session active !!!!!!!!!!")
                 print("You can create a new note (C), delete a note (D), update (U), or review all your notes (R); Press (L) to log out")
-                session_action = input("What you wanna do? ").lower().strip()
+                session_action = input(">>> What you wanna do? ").lower().strip()
                 NOTE = Note(DB["notes"])
 
                 #* Create note
@@ -66,8 +66,8 @@ elif action == "l":
                     print("Ok field the form and you get it")
                     note = {
                         "author": session_user["_id"],
-                        "title": input("1/2; Enter your title: "),
-                        "description": input("2/2; Enter what you gonna do: "),
+                        "title": input(">>> 1/2; Enter your title: "),
+                        "description": input(">>> 2/2; Enter what you gonna do: "),
                         "created_at": datetime.now(),
                         "updated_at": datetime.now()
                     }
@@ -76,8 +76,8 @@ elif action == "l":
                 #* Delete note
                 elif session_action == "d":
 
-                    note_name = input("What is the name of the note to delete: ")
-                    confirm = input("Are you sure you want to delete this note? Y/N: ").lower().strip()
+                    note_name = input(">>> What is the name of the note to delete: ")
+                    confirm = input(">>> Are you sure you want to delete this note? Y/N: ").lower().strip()
                     if confirm == "y":
                         NOTE.delete_note({"title": note_name, "author": session_user["_id"] })
                     elif confirm == "n":
@@ -99,7 +99,7 @@ elif action == "l":
                 #* Update note
                 elif session_action == "u":
                     print("****Press enter in any field that you dont want to change****")
-                    note = input("Which note do you want to update? (write the title) ")
+                    note = input(">>> Which note do you want to update? (write the title) ")
                     new_note = {
                         "title": input("1/2; Type the new title: "),
                         "description": input("2/2; Type the new description: "),
@@ -108,7 +108,9 @@ elif action == "l":
                     NOTE.update_note({"title": note, "author": session_user["_id"] }, new_note)
 
                 elif session_action == "l":
-                    confirm = input("Are you sure you want to leave? Y/N ").lower().strip()
+                    confirm = input(">>> Are you sure you want to leave? Y/N ").lower().strip()
                     if(confirm == "y"):
                         session = False
                         print("See you later")
+else:
+    print("THIS OPTION DOES NOT EXIST")
