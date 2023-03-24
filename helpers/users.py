@@ -1,9 +1,23 @@
 from validators.text import greater_than
+from .recognizer import Recognizer
+import re
+
 
 class User:
 
     def __init__(self, db_collection):
         self.collection = db_collection
+        self.RECOGNIZER = Recognizer()
+
+    def ask_for_user_action(self):
+        try:
+
+            transcription = self.RECOGNIZER.recognize()
+            re_match = re.search("sign\s?up", transcription) or re.search("log\s?in", transcription)
+            return re_match
+
+        except Exception:
+            print("Error try again")
 
     def sign_up(self, user):
         if not(greater_than(user["name"], 1)) or not(greater_than(user["last_name"], 1)):

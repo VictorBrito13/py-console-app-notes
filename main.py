@@ -1,6 +1,8 @@
 import hashlib
-from datetime import datetime
 import pandas as pd
+import keyboard as kb
+import re
+from datetime import datetime
 from validators.text import greater_than
 from helpers.connection_db import MongoConnector
 from helpers.users import User
@@ -13,14 +15,36 @@ DB_CONNECTOR = MongoConnector(STRING_CONNECTOR)
 DB = DB_CONNECTOR.connect()
 
 USER = User(DB["users"])
+NOTE = Note(DB["notes"])
 
-print("Hey there what you wanna do?")
-action = input(">>> Log in (L) or Sign up (S): ").lower().strip()
+
+print("Hey there what you wanna do? (press `ctrl+*` to speak and say something like: 'I wanna log in' or 'sign up')")
+
 attempting = True
 session = False
 
-if action == "s":
+def listen_to_select_action():
+    reg_exp = USER.ask_for_user_action()
+    if(reg_exp):
+        kb.write(reg_exp.group())
+        kb.press("enter")
+    else:
+        print("Please try something like 'log in' or 'sign up'")
 
+select_action_hotkey = kb.add_hotkey("ctrl+*", lambda: listen_to_select_action())
+
+action = input(">>> Log in (L) or Sign up (S): ").lower().strip()
+
+
+kb.remove_hotkey(select_action_hotkey)
+
+def write_note_transcription():
+    transcription = NOTE.ask_for_create_note()
+    kb.write(transcription)
+
+note_creation_hoykey = kb.add_hotkey("ctrl+*", lambda: write_note_transcription())
+
+if action == "s" or re.search("sign\s?up", action):
     while attempting:
 
         print("Great respond this questions to create your new account")
@@ -39,7 +63,7 @@ if action == "s":
         }
         attempting = USER.sign_up(user)
 
-elif action == "l":
+elif action == "l" or re.search("log\s?in", action):
         while attempting:
             print("Ok please enter your name and your password")
             session_user = None
@@ -59,11 +83,11 @@ elif action == "l":
                 print("Session active !!!!!!!!!!")
                 print("You can create a new note (C), delete a note (D), update (U), or review all your notes (R); Press (L) to log out")
                 session_action = input(">>> What you wanna do? ").lower().strip()
-                NOTE = Note(DB["notes"])
 
                 #* Create note
                 if session_action == "c":
                     print("Ok field the form and you get it")
+                    print("You can press ctrl+* to speak, but press enter when your transcription gets writed in to continue")
                     note = {
                         "author": session_user["_id"],
                         "title": input(">>> 1/2; Enter your title: "),
@@ -76,11 +100,12 @@ elif action == "l":
                 #* Delete note
                 elif session_action == "d":
 
+                    print("You can press ctrl+* to speak, but press enter when your transcription gets writed in to continue")
                     note_name = input(">>> What is the name of the note to delete: ")
                     confirm = input(">>> Are you sure you want to delete this note? Y/N: ").lower().strip()
                     if confirm == "y":
                         NOTE.delete_note({"title": note_name, "author": session_user["_id"] })
-                    elif confirm == "n":
+                    else:
                         print("Your note has not been deleted")
 
                 #* Get notes
@@ -98,6 +123,7 @@ elif action == "l":
 
                 #* Update note
                 elif session_action == "u":
+                    print("You can press ctrl+* to speak, but press enter when your transcription gets writed in to continue")
                     print("****Press enter in any field that you dont want to change****")
                     note = input(">>> Which note do you want to update? (write the title) ")
                     new_note = {

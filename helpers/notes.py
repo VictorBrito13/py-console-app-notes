@@ -1,9 +1,15 @@
 from validators.text import greater_than
+from .recognizer import Recognizer
 import copy
 
 class Note:
     def __init__(self, collection):
         self.collection = collection
+        self.RECOGNIZER = Recognizer()
+
+    def ask_for_create_note(self):
+        transcription = self.RECOGNIZER.recognize()
+        return transcription
 
     def create_note(self, note):
         try:
