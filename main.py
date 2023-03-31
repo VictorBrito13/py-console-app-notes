@@ -1,4 +1,6 @@
 import hashlib
+import os
+from dotenv import load_dotenv
 import pandas as pd
 import keyboard as kb
 import re
@@ -8,7 +10,9 @@ from helpers.connection_db import MongoConnector
 from helpers.users import User
 from helpers.notes import Note
 
-STRING_CONNECTOR = "mongodb://127.0.0.1/console_app_notes"
+load_dotenv()
+
+STRING_CONNECTOR = os.getenv("MONGO_URI")
 
 DB_CONNECTOR = MongoConnector(STRING_CONNECTOR)
 

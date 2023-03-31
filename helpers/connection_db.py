@@ -5,5 +5,8 @@ class MongoConnector:
         self.string_connector = string_connector
 
     def connect(self):
-        db = MongoClient(self.string_connector)
-        return db["console_app_notes"]
+        try:
+            db = MongoClient(self.string_connector)
+            return db["terminal-app-notes"] #or console_app_notes for development
+        except Exception:
+            print("Error trying to connect to Mongodb")
