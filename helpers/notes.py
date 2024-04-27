@@ -35,7 +35,9 @@ class Note:
 
     def get_notes(self, user_collection, user_id):
         try:
+            #Devuelve TODOS los usuarios con sus notas
             users = user_collection.aggregate([{ "$lookup": { "from": "notes", "localField": "_id", "foreignField": "author", "as": "notes" } }])
+            #Buscamos un usuarion en especifico
             for user in users:
                 if user["_id"] == user_id:
                     return user["notes"]

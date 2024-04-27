@@ -1,2 +1,5 @@
 /code_concepts
 .env
+*.spec
+/dist
+/build

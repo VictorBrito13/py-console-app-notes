@@ -39,7 +39,6 @@ select_action_hotkey = kb.add_hotkey("ctrl+*", lambda: listen_to_select_action()
 
 action = input(">>> Log in (L) or Sign up (S): ").lower().strip()
 
-
 kb.remove_hotkey(select_action_hotkey)
 
 def write_note_transcription():
@@ -144,3 +143,4 @@ elif action == "l" or re.search("log\s?in", action):
                         print("See you later")
 else:
     print("THIS OPTION DOES NOT EXIST")
+    print("Initialize the project again")

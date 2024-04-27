@@ -23,10 +23,14 @@ class User:
         if not(greater_than(user["name"], 1)) or not(greater_than(user["last_name"], 1)):
             print("Hey you got a error please verify each field \n the name and last name must be longer than 1")
             return True
+        elif(self.collection.find_one({ "name": user["name"] })):
+            print("Hey this user already exists")
+            return True
         else:
             try:
                 self.collection.insert_one(user)
                 print("Your user has been created successfully")
+                print("Now you can login with your data")
                 return False
             except Exception as error:
                 print(error)
